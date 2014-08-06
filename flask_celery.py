@@ -7,13 +7,12 @@ __author__ = 'comyn'
 
 class Celery(object):
     def __init__(self, app=None):
-        self._celery = None
+        self._celery = C()
         if app:
             self.init_app(app)
 
     def init_app(self, app):
-        self._celery = C(app.import_name, broker=app.config['CELERY_BROKER_URL'])
-        self._celery.conf.update(app.config)
+        self._celery.config_from_object(app.config, force=True)
         TaskBase = self._celery.Task
         class ContextTask(TaskBase):
             abstract = True
